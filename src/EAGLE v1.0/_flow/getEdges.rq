@@ -1,0 +1,1 @@
+SELECT DISTINCT(?p AS ?edges) WHERE {?s ?p ?o}

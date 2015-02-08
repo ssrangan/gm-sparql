@@ -1,0 +1,229 @@
+# Copyright 2013-2014 YarcData LLC, a Cray Company. All Rights Reserved.
+
+#
+#$ BLOCK PROLOGUE
+#
+
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX label:  <http://www.w3.org/2000/01/rdf-schema#label>
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
+PREFIX dct:    <http://purl.org/dc/terms/>
+PREFIX solar:  <http://solar.yarcdata.com/solar/>
+PREFIX profile: <http://solar.yarcdata.com/profile/>
+PREFIX defaultGraph: <urn:x-arq:DefaultGraphNode>
+
+#
+#$ BLOCK INIT
+#
+
+#$ INCLUDE PROLOGUE
+
+CLEAR SILENT GRAPH $ngraph ;
+
+INSERT { GRAPH $ngraph {
+  $ngraph a solar:NamedGraph ; a profile:ProfileGraph ;
+    a solar:Materialized ;
+    label: "Profile results"^^xsd:string ;
+    rdfs:comment "Stored results from profiling the database"^^xsd:string ;
+    dct:created ?now .
+} }
+WHERE {
+  BIND( NOW() AS ?now )
+} ;
+
+#
+#$ BLOCK COMPLETED
+#
+
+#$ INCLUDE PROLOGUE
+
+INSERT { GRAPH $ngraph {
+  $node dct:modified ?now .
+} }
+WHERE {
+  BIND( NOW() AS ?now )
+} ;
+
+#
+#$ BLOCK NGRAPH_COUNTS node=profile:namedGraphCounts
+#
+
+#$ INCLUDE PROLOGUE
+
+DELETE WHERE { GRAPH ${ngraph} {
+  $node ?a ?b .
+  ?s solar:memberOf $node ; ?p ?o .
+} } ;
+
+INSERT { GRAPH $ngraph {
+  $node a profile:NamedGraphCounts ; a profile:Result ;
+    a solar:Materialized ;
+    label: "Named Graph Triple Counts"^^xsd:string ;
+    dct:created ?now .
+} }
+WHERE {
+  BIND( NOW() AS ?now )
+} ;
+
+INSERT { GRAPH $ngraph {
+  [] a solar:Record ; solar:memberOf $node ;
+    solar:ngraph ?ngraph ;
+    solar:size ?count .
+} }
+WHERE {
+  {
+    SELECT
+    ( defaultGraph: AS ?ngraph )
+    ( COUNT( * ) AS ?count )
+    WHERE {
+      ?s ?p ?o .
+    }
+  }
+  UNION
+  {
+    SELECT
+    ?ngraph
+    ( COUNT( * ) AS ?count )
+    WHERE {
+      { GRAPH ?ngraph {
+          ?s ?p ?o .
+        } }
+    }
+    GROUP BY ?ngraph
+  }
+} ;
+
+#
+#$ BLOCK TYPE_COUNTS node=profile:typeCounts
+#
+
+#$ INCLUDE PROLOGUE
+
+DELETE WHERE { GRAPH $ngraph {
+  ?node ?a ?b .
+  ?s solar:memberOf $node ; ?p ?o .
+} } ;
+
+INSERT { GRAPH $ngraph {
+  $node a profile:TypeCounts ; a profile:Result ;
+    a solar:Materialized ;
+    label: "Type Counts"^^xsd:string ;
+    dct:created ?now .
+} }
+WHERE {
+  BIND( NOW() AS ?now )
+} ;
+
+INSERT { GRAPH $ngraph {
+  [] a solar:Record ; solar:memberOf $node ;
+    solar:ngraph ?ngraph ;
+    solar:type ?type ;
+    solar:typeCt ?count .
+} }
+WHERE {
+  {
+    SELECT
+    ( defaultGraph: AS ?ngraph )
+    ?type
+    ( COUNT( ?s ) AS ?count )
+    WHERE {
+      ?s a ?type .
+    }
+    GROUP BY ?type
+  }
+  UNION
+  {
+    SELECT
+    ?ngraph
+    ?type
+    ( COUNT( ?s ) AS ?count )
+    WHERE {
+      { GRAPH ?ngraph {
+        ?s a ?type .
+      } }
+    }
+    GROUP BY ?ngraph ?type
+  }
+} ;
+
+INSERT { GRAPH $ngraph {
+  profile:typeCounts dct:modified ?now ;
+    solar:completed ?now .
+} }
+WHERE {
+  BIND( NOW() AS ?now )
+} ;
+
+#
+#$ BLOCK PRED_COUNTS node=profile:predCounts
+#
+
+#$ INCLUDE PROLOGUE
+
+DELETE WHERE { GRAPH ${ngraph} {
+  $node ?a ?b .
+  ?s solar:memberOf $node ; ?p ?o .
+} } ;
+
+INSERT { GRAPH ${ngraph} {
+  $node a profile:PredCounts ; a profile:Result ;
+    a solar:Materialized ;
+    label: "Predicate Counts"^^xsd:string ;
+    dct:created ?now .
+} }
+WHERE {
+  BIND( NOW() AS ?now )
+} ;
+
+INSERT { GRAPH ${ngraph} {
+  [] a solar:Record ; solar:memberOf $node ;
+    solar:ngraph ?ngraph ;
+    solar:predicate ?pred ;
+    # solar:nodeCt ?nodeCt ;
+    # solar:subjectCt ?subjects ;
+    # solar:objectCt ?objects ;
+    solar:size ?size .
+} }
+WHERE {
+  {
+    SELECT
+    ( defaultGraph: AS ?ngraph )
+    ?pred
+    ( COUNT( ?s ) AS ?size )
+    # ( COUNT( DISTINCT ?s ) AS ?subjects )
+    # ( COUNT( DISTINCT ?o ) AS ?objects )
+    WHERE {
+      ?s ?pred ?o .
+    }
+    GROUP BY ?pred
+  }
+  # UNION
+  # {
+  #   SELECT
+  #   ( defaultGraph: AS ?ngraph )
+  #   ?pred
+  #   ( COUNT( DISTINCT ?s ) AS ?nodeCt )
+  #   WHERE {
+  #     { ?s ?pred ?o }
+  #     UNION
+  #     { ?o ?pred ?s }
+  #   }
+  #   GROUP BY ?pred
+  # }
+  UNION
+  {
+    SELECT
+    ?ngraph
+    ?pred
+    ( COUNT( ?s ) AS ?size )
+    # ( COUNT( DISTINCT ?s ) AS ?subjects )
+    # ( COUNT( DISTINCT ?o ) AS ?objects )
+    WHERE { GRAPH ?ngraph {
+      ?s ?pred ?o .
+    } }
+    GROUP BY ?ngraph ?pred
+  }
+} ;
+
+#

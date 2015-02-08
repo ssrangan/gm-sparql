@@ -1,0 +1,15 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?NS1 ?prop ?NS2 ( COUNT (*) AS ?numLinks )
+WHERE {
+     ?res1 ?prop ?res2 .
+    FILTER ( isIRI (?res1 ))
+    FILTER ( isIRI (?res2 ))
+    BIND ( REPLACE ( str (?res1 ), " [^/#]* $", "") AS ?NS1)
+    BIND ( REPLACE ( str (?res2 ), " [^/#]* $", "") AS ?NS2)
+}
+GROUP BY ?NS1 ?prop ?NS2

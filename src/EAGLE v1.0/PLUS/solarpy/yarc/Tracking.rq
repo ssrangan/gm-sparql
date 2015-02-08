@@ -1,0 +1,63 @@
+# Copyright 2013 YarcData LLC, a Cray Company. All Rights Reserved.
+
+#
+#$ BLOCK PROLOGUE
+#
+
+BASE <http://urika/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX label: <http://www.w3.org/2000/01/rdf-schema#label>
+PREFIX comment: <http://www.w3.org/2000/01/rdf-schema#comment>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX config: <config/>
+PREFIX track: <track/>
+
+#
+#$ BLOCK STATS_SELECT
+#
+
+SELECT
+  ?label
+  ?context
+  ( COUNT( ?entry ) AS ?count )
+  ( SUM( ?sec ) AS ?seconds )
+  ( AVG( ?sec ) AS ?avg )
+  ( MIN( ?sec ) AS ?min )
+  ( MAX( ?sec ) AS ?max )
+  ( MAX( ?dbmem_used ) AS ?dbmem_max )
+WHERE {
+  ?entry track:start ?start .
+  ?entry a ?type .
+  ?entry track:context ?ctx .
+  ?ctx label: ?context .
+  ?type label: ?label .
+  OPTIONAL { ?entry track:seconds ?sec }
+  OPTIONAL { ?entry track:dbmem_used ?dbmem_used }
+}
+GROUP BY ?type
+
+#
+#$ BLOCK STATS_ALL
+#
+#$ INCLUDE PROLOGUE
+
+#$ INCLUDE STATS_SELECT
+ORDER BY ?seconds ?avg ?label
+
+#
+#$ BLOCK STATS_HIGH
+#
+#$ INCLUDE PROLOGUE
+
+SELECT *
+WHERE {
+  {
+    #$ INCLUDE STATS_SELECT
+  }
+  # Bug in rdflib.py, HAVING does not work, so using sub-query and FILTER
+  FILTER( ( ?seconds > 4 ) || ( ?count > 10 ) || ( ?dbmem_max > 100 ) )
+}
+ORDER BY ?seconds ?avg ?label
+
+#

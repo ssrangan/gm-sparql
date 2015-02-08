@@ -1,0 +1,4 @@
+SELECT ?o (COUNT(DISTINCT ?p) AS ?num) 
+    { ?s ?p ?o }
+GROUP BY ?o
+ORDER BY DESC(?num)

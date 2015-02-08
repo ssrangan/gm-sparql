@@ -1,0 +1,5 @@
+SELECT (COUNT(DISTINCT ?vertex) as ?nodeCount)
+WHERE { 
+   { ?vertex ?p [] } 
+UNION 
+   { [] ?p ?vertex FILTER(!IsLiteral(?vertex)) } }

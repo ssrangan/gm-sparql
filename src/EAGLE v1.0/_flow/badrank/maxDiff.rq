@@ -1,0 +1,12 @@
+            SELECT (MAX(?diff) as ?maxDiff)
+            WHERE
+            {
+              GRAPH <%s>
+              {
+                ?s <%s/prevBR> ?o1 .
+                ?s <%s/newBR> ?o2 .
+                BIND(ABS(?o1 - ?o2) AS ?diff)
+              }
+            }
+			
+			

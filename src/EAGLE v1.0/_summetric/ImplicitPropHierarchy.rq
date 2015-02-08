@@ -1,0 +1,18 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?subProp ?superProp
+WHERE {
+?s ?subProp ?o.
+?s ?superProp ?o.
+FILTER (?subProp != ?superProp )
+FILTER NOT EXISTS {
+?anyS ?subProp ?anyO .
+FILTER NOT EXISTS {
+?anyS ?superProp ?anyO . }
+}
+}
+GROUP BY ?subProp ?superProp

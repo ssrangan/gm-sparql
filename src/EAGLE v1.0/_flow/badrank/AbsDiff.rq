@@ -1,0 +1,4 @@
+select (sum(abs(?o-?o1)) as ?absDiff) where { graph  <%s> 
+{?s <%s/newBR> ?o.
+?s <%s/prevBR> ?o1}}
+

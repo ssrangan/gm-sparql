@@ -1,0 +1,13 @@
+select ?degree (COUNT (?degree) AS ?Count )
+where {{
+select (COUNT (?s) AS ?degree)
+where {
+{?s ?p ?o}
+UNION
+{?ss ?p2 ?s}
+}
+Group By ?s}
+}
+group by ?degree
+order by ?degree
+%s

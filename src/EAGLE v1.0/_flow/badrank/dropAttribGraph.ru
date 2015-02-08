@@ -1,0 +1,1 @@
+DROP SILENT GRAPH <%s>

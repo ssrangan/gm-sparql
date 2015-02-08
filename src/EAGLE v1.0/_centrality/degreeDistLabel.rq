@@ -1,0 +1,18 @@
+select ?degree (COUNT (?degree) AS ?Count )
+where {{
+select ?s (COUNT (?s) AS ?degree)
+where {
+
+{?s ?p ?o.
+FILTER (?p != <%s>)}
+UNION
+{?ss ?p2 ?s.
+FILTER (?p2 != <%s>)
+}
+?s <%s> %s.
+}
+Group By ?s}
+}
+group by ?degree
+order by ?degree
+%s

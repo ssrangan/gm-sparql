@@ -1,0 +1,24 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?class ?property
+WHERE {
+    { SELECT ?class ?property ( COUNT ( DISTINCT ?I ) as ?numInstances )
+WHERE {
+    ?I ?property ?o .
+    ?I a ?class .
+ FILTER (?property!=rdf:type)
+}
+GROUP BY ?class ?property
+}
+{
+SELECT ?class ( COUNT ( DISTINCT ?I ) AS ?numI )
+WHERE {
+   ?I a ?class . }
+GROUP BY ?class
+}
+FILTER (?numInstances = ?numI )
+}

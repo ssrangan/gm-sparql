@@ -1,0 +1,5 @@
+SELECT ?property (COUNT(?triples) AS ?count) 
+WHERE 
+    { ?triples ?property ?o.}
+GROUP BY ?property 
+ORDER BY ?count

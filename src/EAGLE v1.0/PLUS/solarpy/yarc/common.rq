@@ -1,0 +1,194 @@
+# Copyright 2013-2014 YarcData LLC, a Cray Company. All Rights Reserved.
+
+#
+#$ BLOCK ASK_NOTHING
+#
+
+ASK WHERE {
+  ?s a <http://www.w3.org/2000/01/rdf-schema#Class> .
+}
+
+#
+#$ BLOCK COUNT_DEFAULT
+#
+
+SELECT
+  ( COUNT( * ) AS ?count )
+WHERE {
+  ?s ?p ?o .
+}
+
+#
+#$ BLOCK COUNT_GRAPH
+#
+
+SELECT
+  ( COUNT( * ) AS ?count )
+WHERE {
+  { GRAPH ${ngraph} {
+  ?s ?p ?o .
+  } }
+}
+
+#
+#$ BLOCK COUNT_TYPE
+#
+
+SELECT
+  ( COUNT( ?s ) AS ?count )
+WHERE {
+  ?s a ${rdftype} .
+}
+
+#
+#$ BLOCK COUNT_TYPE_NGRAPH
+#
+
+SELECT
+  ( COUNT( ?s ) AS ?count )
+WHERE {
+  { GRAPH ${ngraph} {
+  ?s a ${rdftype} .
+  } }
+}
+
+#
+#$ BLOCK SHOW_ALL
+#
+
+SELECT
+  ( REPLACE(
+    STR( ?s ), STR( : ), ":" )
+    AS ?s_s )
+  ( REPLACE( REPLACE( REPLACE(
+    STR( ?p ), STR( : ), ":" ),
+    STR( rdf: ), "rdf:" ),
+    STR( rdfs: ), "rdfs:" )
+    AS ?p_s )
+  ( REPLACE( REPLACE( REPLACE( REPLACE(
+    STR( ?o ), STR( : ), ":" ),
+    STR( rdf: ), "rdf:" ),
+    STR( rdfs: ), "rdfs:" ),
+    STR( xsd: ), "xsd:" )
+    AS ?o_s )
+WHERE {
+  ?s ?p ?o .
+}
+ORDER BY ?s ?p ?o
+LIMIT 10000
+
+#
+#$ BLOCK COUNT_PREDS
+#
+
+SELECT
+  ?pred
+  ( COUNT( ?s ) AS ?count )
+WHERE {
+  ?s ?pred ?o .
+}
+GROUP BY ?pred
+ORDER BY ?count ?pred
+
+#
+#$ BLOCK COUNT_TYPES
+#
+
+SELECT
+  ?type
+  ( COUNT( ?s ) AS ?count )
+WHERE {
+  ?s a ?type .
+}
+GROUP BY ?type
+ORDER BY ?count ?type
+
+#
+#$ BLOCK PRED_STATS_ALL
+#
+
+SELECT
+  ?pred
+  ( COUNT( ?o ) AS ?count )
+  ( COUNT( DISTINCT ?o ) AS ?distinct_objects )
+  ( MIN( ?o ) AS ?min )
+  ( MAX( ?o ) AS ?max )
+  ( AVG( ?o ) AS ?avg )
+  ( SAMPLE( ?s ) AS ?sample_subject )
+  ( SAMPLE( ?o ) AS ?sample_object )
+WHERE {
+  ?s ?pred ?o .
+}
+GROUP BY ?pred
+ORDER BY ?pred
+
+#
+#$ BLOCK PRED_STATS_NAN
+#
+
+SELECT
+  ?pred
+  ( COUNT( ?o ) AS ?count )
+  ( COUNT( DISTINCT ?o ) AS ?distinct_objects )
+  ( SAMPLE( ?s ) AS ?sample_subject )
+  ( SAMPLE( ?o ) AS ?sample_object )
+WHERE {
+  ?pred rdfs:range ${range} .
+  ?s ?pred ?o .
+}
+GROUP BY ?pred
+ORDER BY ?pred
+
+#
+#$ BLOCK PRED_STATS_NUMBER
+#
+
+SELECT
+  ?pred
+  ( COUNT( ?o ) AS ?count )
+  ( COUNT( DISTINCT ?o ) AS ?distinct_objects )
+  ( MIN( ?o ) AS ?min )
+  ( MAX( ?o ) AS ?max )
+  ( AVG( ?o ) AS ?avg )
+  ( SAMPLE( ?s ) AS ?sample_subject )
+  ( SAMPLE( ?o ) AS ?sample_object )
+WHERE {
+  ?pred rdfs:range ${range} .
+  ?s ?pred ?o .
+}
+GROUP BY ?pred
+ORDER BY ?pred
+
+#
+#$ BLOCK CLEAR_DEFAULT
+#
+
+CLEAR DEFAULT ;
+
+#
+#$ BLOCK CLEAR_NGRAPH
+#
+
+CLEAR SILENT GRAPH ${ngraph} ;
+
+#
+#$ BLOCK CLEAR_ALL
+#
+
+CLEAR ALL ;
+
+#
+#$ BLOCK LOAD_FILE ngraph=<urn:x-arq:DefaultGraphNode>
+#
+
+LOAD <file://${ntFile}> INTO GRAPH ${ngraph} ;
+
+#
+#$ BLOCK INSERT_DATA
+#
+
+INSERT DATA {
+  ${data}
+} ;
+
+#

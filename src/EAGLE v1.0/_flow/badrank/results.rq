@@ -1,0 +1,9 @@
+SELECT ?s ?newBR
+WHERE { graph  <%s>
+{
+ ?s  <%s/newBR> ?newBR . 
+
+}} 
+ORDER BY DESC(?newBR)
+%s
+			

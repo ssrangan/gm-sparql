@@ -1,0 +1,152 @@
+# Copyright 2013-2014 YarcData LLC, a Cray Company. All Rights Reserved.
+
+#
+#$ BLOCK METADATA
+#
+
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX solar:    <http://solar.yarcdata.com/solar/>
+
+DELETE {
+  solar: ?a ?b .
+  ?s ?p ?o .
+}
+WHERE {
+  solar: a owl:Ontology .
+  solar: ?a ?b .
+  ?s rdfs:isDefinedBy solar: .
+  ?s ?p ?o .
+} ;
+
+INSERT DATA {
+
+  solar: a owl:Ontology ;
+    label: "Solar Ontology"^^xsd:string ;
+    <http://purl.org/dc/elements/1.1/title> "YarcData Solutions, Ontology"^^xsd:string .
+
+  solar:ancestor a rdf:Property ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:domain rdfs:Resource ;
+    rdfs:range rdfs:Resource ;
+    label: "ancestor"^^xsd:string ;
+    rdfs:comment "Provides context, specifying the subject was calculated from, or somehow descended from some other object."^^xsd:string .
+
+  solar:Materialized a rdfs:Class ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:subClassOf rdfs:Resource ;
+    label: "materialized"^^xsd:string ;
+    rdfs:comment "A materialized or calculated value (so staleness must be considered)."^^xsd:string .
+
+  solar:Tag a rdfs:Class ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:subClassOf rdfs:Resource ;
+    label: "Tag"^^xsd:string ;
+    rdfs:comment "Any URI may be typed as a Tag"^^xsd:string .
+  solar:tag a rdf:Property ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:domain rdfs:Resource ;
+    rdfs:range solar:Tag ;
+    label: "tag"^^xsd:string .
+
+  solar:Network a rdfs:Class ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:subClassOf rdfs:Resource ;
+    label: "Network"^^xsd:string ;
+    rdfs:comment "Describes a particular network found in the data"^^xsd:string .
+  solar:UnipartiteNetwork a rdfs:Class ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:subClassOf solar:Network ;
+    label: "Unipartite Network"^^xsd:string ;
+    rdfs:comment "Describes a particular unipartite network found in the data"^^xsd:string .
+  solar:BipartiteNetwork a rdfs:Class ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:subClassOf solar:Network ;
+    label: "Bipartite Network"^^xsd:string ;
+    rdfs:comment "Describes a particular Bipartite network found in the data"^^xsd:string .
+  solar:RecordStructuredNetwork a rdfs:Class ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:subClassOf solar:Network ;
+    label: "Record-structured Network"^^xsd:string ;
+    rdfs:comment "Describes a particular network found in the data, where nodes not linked by SPO statements, but reified records."^^xsd:string .
+  solar:predicate a rdf:Property ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:domain rdfs:Network ;
+    rdfs:range rdf:Property ;
+    label: "predicate"^^xsd:string ;
+    rdfs:comment "The predicate(s) used to make up the network"^^xsd:string .
+  solar:ngraph a rdf:Property ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:domain rdfs:Network ;
+    rdfs:range rdf:Property ;
+    label: "named-graph"^^xsd:string ;
+    rdfs:comment "The named graph in which the network data is stored"^^xsd:string .
+  solar:edgeCt a rdf:Property ; a solar:Materialized ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:domain rdfs:Network ;
+    rdfs:range xsd:integer ;
+    label: "edge count"^^xsd:string ;
+    rdfs:comment "Count of edges in network (materialized)"^^xsd:string .
+  solar:subjectCt a rdf:Property ; a solar:Materialized ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:domain rdfs:Network ;
+    rdfs:range xsd:integer ;
+    label: "subject count"^^xsd:string ;
+    rdfs:comment "Count of distinct subjects in network (materialized)"^^xsd:string .
+  solar:objectCt a rdf:Property ; a solar:Materialized ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:domain rdfs:Network ;
+    rdfs:range xsd:integer ;
+    label: "object count"^^xsd:string ;
+    rdfs:comment "Count of distinct objects in network (materialized)"^^xsd:string .
+  solar:nodeCt a rdf:Property ; a solar:Materialized ;
+    rdfs:isDefinedBy solar: ;
+    rdfs:domain rdfs:Network ;
+    rdfs:range xsd:integer ;
+    label: "node count"^^xsd:string ;
+    rdfs:comment "Count of distinct nodes (both subjects and objects) in network (materialized)"^^xsd:string .
+
+} ;
+
+INSERT DATA { GRAPH solar:Math {
+  # TODO: Counting
+  # TODO: from
+  # TODO: to
+  [] a solar:Counting ; solar:from 0 ; solar:to 9 ; rdf:value 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 .
+  [] a solar:Counting ; solar:from 1 ; solar:to 10 ; rdf:value 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 .
+  [] a solar:Counting ; solar:from 0 ; solar:to 29 ; rdf:value 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 .
+} } ;
+
+#
+#$ BLOCK INSERT_NETWORK_STATS ngraph=<urn:x-arq:DefaultGraphNode> predicate=?p
+#
+
+INSERT { GRAPH ${ngraph} {
+  ${networkUri} dct:modified ?now ;
+    solar:edgeCt ?edgeCt ;
+    solar:nodeCt ?nodeCt ;
+    solar:subjectCt ?subjectCt ;
+    solar:objectCt ?objectCt .
+} }
+WHERE {
+  {
+    SELECT
+      ( COUNT ( * ) AS ?edgeCt )
+      ( COUNT ( DISTINCT ?s ) AS ?subjectCt )
+      ( COUNT ( DISTINCT ?o ) AS ?objectCt )
+    WHERE { GRAPH ${ngraph} {
+      ${networkUri} solar:predicate ${predicate} . ?s ${predicate} ?o .
+    } }
+  }
+  {
+    SELECT
+      ( COUNT ( DISTINCT ?s ) AS ?nodeCt )
+    WHERE { GRAPH ${ngraph} {
+      { ${networkUri} solar:predicate ${predicate} . ?s ${predicate} ?o . }
+      UNION
+      { ${networkUri} solar:predicate ${predicate} . ?o ${predicate} ?s . }
+    } }
+  }
+  BIND( NOW() AS ?now )
+} ;
+
+#

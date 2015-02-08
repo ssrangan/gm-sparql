@@ -1,0 +1,21 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ( COUNT ( DISTINCT ?CL) AS ?numDefClasses )
+( COUNT ( DISTINCT ?CO) AS ?numDefConcepts )
+( COUNT ( DISTINCT ?P) AS ?numDefProperties )
+( COUNT ( DISTINCT ?I) AS ?numTypedResources )
+WHERE {
+{ ?CL a rdfs:Class . }
+UNION { ?CL a owl:Class . }
+UNION
+{ ?CO a skos:Concept . }
+UNION
+{ ?P a rdf:Property . }
+UNION
+{ ?I a ?class .
+FILTER (?class != rdfs:Resource )}
+}

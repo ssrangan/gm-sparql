@@ -1,0 +1,52 @@
+#$ BLOCK FILTER
+FILTER ( ?p == $o ) .
+
+#$ BLOCK WHERE
+
+WHERE {
+  ?s ?p ?o .
+  #$ INCLUDE FILTER
+}
+
+#$ BLOCK SELECT
+
+SELECT ?s ?p ?o
+#$ INCLUDE WHERE
+
+#$ BLOCK CONSTRUCT
+
+CONSTRUCT {
+  ?s ?p ?o .
+}
+#$ INCLUDE WHERE
+
+#
+#$ BLOCK INCLUDE_ARG
+#
+
+CONSTRUCT {
+  ?s ?p ?o .
+}
+#$ INCLUDE WHERE o="include-arg"
+
+#
+#$ BLOCK WHERE_ARGS o="where-arg"
+WHERE { ?s ?p ${o} }
+#$ BLOCK BLOCK_ARG
+#
+
+CONSTRUCT {
+  ?s ?p ?o .
+}
+#$ INCLUDE WHERE_ARGS
+
+#
+#$ BLOCK BLOCK_ARG_OVERRIDE
+#
+
+CONSTRUCT {
+  ?s ?p ?o .
+}
+#$ INCLUDE WHERE_ARGS o="block_arg_override"
+
+#
