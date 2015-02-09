@@ -1,7 +1,11 @@
 '''
-Created on 2014. 11. 5.
+ List of ORNL team members (in alphabetical order)
 
-@author: Seokyong Hong
+*Sangkeun Lee (lees4@ornl.gov, leesangkeun@gmail.com)
+*Seokyong Hong (shong3@ncsu.edu)
+*Seung-Hwan. Lim (lims1@ornl.gov)
+*Sreenivas R. Sukumar (sukumarsr@ornl.gov)
+
 '''
 from graph import DegreeDistribution as DegreeDistributionModule
 from graph import Eccentricity as EccentricityModule
