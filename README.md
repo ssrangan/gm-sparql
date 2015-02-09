@@ -10,9 +10,9 @@ We really appreciate citing the following paper if our code was useful in anyway
 S.Lee (lees4@ornl.gov) , S.R. Sukumar (sukumarsr@ornl.gov) and S- H. Lim (lims1@ornl.gov), ”Graph mining meets the Semantic Web”, in the Proc. of the Workshop on Data Engineering meets the Semantic Web in conjunction with International Conference on Data Engineering, Korea, 2015.
 
 List of ORNL team members (in alphabetical order)
-* Sangkeun Lee (lees4@ornl.gov, leesangkeun@gmail.com)
+* Sangkeun Lee (lees4@ornl.gov, leesangkeun@gmail.com) - Post-doc
 * Seung-Hwan. Lim (lims1@ornl.gov)
-* Seokyong Hong (shong3@ncsu.edu)
+* Seokyong Hong (shong3@ncsu.edu) - Intern
 * Sreenivas R. Sukumar (sukumarsr@ornl.gov)
-* Tyler C. Brown (browntc@ornl.gov)
+* Tyler C. Brown (browntc@ornl.gov) - Intern
 
