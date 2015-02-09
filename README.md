@@ -10,8 +10,12 @@ We really appreciate citing the following paper if our code was useful in anyway
 S.Lee (lees4@ornl.gov) , S.R. Sukumar (sukumarsr@ornl.gov) and S- H. Lim (lims1@ornl.gov), ”Graph mining meets the Semantic Web”, in the Proc. of the Workshop on Data Engineering meets the Semantic Web in conjunction with International Conference on Data Engineering, Korea, 2015.
 
 List of Contributors (in alphabetical order)
+
 Sangkeun Lee (lees4@ornl.gov, leesangkeun@gmail.com)
+
 Seokyong Hong (shong3@ncsu.edu)
+
 Seung-Hwan. Lim (lims1@ornl.gov)
+
 Sreenivas R. Sukumar (sukumarsr@ornl.gov)
 
