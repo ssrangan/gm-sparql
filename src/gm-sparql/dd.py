@@ -1,10 +1,10 @@
 '''
- List of ORNL team members (in alphabetical order)
-
-*Sangkeun Lee (lees4@ornl.gov, leesangkeun@gmail.com)
-*Seokyong Hong (shong3@ncsu.edu)
-*Seung-Hwan. Lim (lims1@ornl.gov)
-*Sreenivas R. Sukumar (sukumarsr@ornl.gov)
+List of ORNL team members (in alphabetical order)
+* Sangkeun Lee (lees4@ornl.gov, leesangkeun@gmail.com)
+* Seung-Hwan. Lim (lims1@ornl.gov)
+* Seokyong Hong (shong3@ncsu.edu)
+* Sreenivas R. Sukumar (sukumarsr@ornl.gov)
+* Tyler C. Brown (browntc@ornl.gov)
 
 '''
 from graph import DegreeDistribution as DegreeDistributionModule

@@ -11,7 +11,8 @@ S.Lee (lees4@ornl.gov) , S.R. Sukumar (sukumarsr@ornl.gov) and S- H. Lim (lims1@
 
 List of ORNL team members (in alphabetical order)
 * Sangkeun Lee (lees4@ornl.gov, leesangkeun@gmail.com)
-* Seokyong Hong (shong3@ncsu.edu)
 * Seung-Hwan. Lim (lims1@ornl.gov)
+* Seokyong Hong (shong3@ncsu.edu)
 * Sreenivas R. Sukumar (sukumarsr@ornl.gov)
+* Tyler C. Brown (browntc@ornl.gov)
 
