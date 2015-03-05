@@ -44,7 +44,7 @@ if __name__ == '__main__':
     # current graph diffusion algorithm is implemented assuming a homogeneous graph 
     # where nodes are connected by a single edge type <urn:connectedTo>
 
-    testGraphDiffusion(startNode = getRandomNode(), initialScore = 1.0, edgeWeight = 0.95, maxIteration = 5)
+    testGraphDiffusion(startNode = getRandomNode(), initialScore = 100.0, edgeWeight = 0.95, maxIteration = 5)
 
     endTime = time.time()
     print 'Elapsed Time: ' + str(endTime - startTime) + ' seconds.'

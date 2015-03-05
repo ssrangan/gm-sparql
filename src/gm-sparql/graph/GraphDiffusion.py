@@ -121,7 +121,7 @@ class GraphDiffusion(GraphAlgorithmModule.GraphAlgorithm):
         
         while True:
             startTime = time.time()
-            self.connection.urika.update(self.name, GraphDiffusion.COMMAND_TO_CREATE_SCORE_ELEM.format(iteration, edgeWeight))
+            #self.connection.urika.update(self.name, GraphDiffusion.COMMAND_TO_CREATE_SCORE_ELEM.format(iteration, edgeWeight))
             self.connection.urika.update(self.name, GraphDiffusion.COMMAND_TO_DIFFUSE_SCORES.format(iteration + 1, iteration, edgeWeight))
             endTime = time.time()
             print 'Elapsed Time Iteration ' + str(iteration + 1) + ': ' + str(endTime - startTime) + ' seconds.'
@@ -142,4 +142,4 @@ class GraphDiffusion(GraphAlgorithmModule.GraphAlgorithm):
             writer.writeLine('Vertex: ' + result['vertex']['value'] + ', Score: ' + result['score']['value'])
 
         writer.close()
-        #self.connection.urika.update(self.name, GraphDiffusion.COMMAND_TO_FINALIZE_WORKING_GRAPH)
+        self.connection.urika.update(self.name, GraphDiffusion.COMMAND_TO_FINALIZE_WORKING_GRAPH)
