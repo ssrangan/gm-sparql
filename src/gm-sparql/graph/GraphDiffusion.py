@@ -40,7 +40,7 @@ class GraphDiffusion(GraphAlgorithmModule.GraphAlgorithm):
                                     }}
                                     '''
 
-    COMMAND_TO_DIFFUSE_SCORES = '''
+    COMMAND_TO_DIFFUSE_SCORES_BETA = '''
                                         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
                                         insert {{graph <http://workingGraph> {{?o <temp:score{0}> ?new_score}}}} where {{
                                         
@@ -66,7 +66,7 @@ class GraphDiffusion(GraphAlgorithmModule.GraphAlgorithm):
                                         DELETE WHERE {{ GRAPH <http://workingGraph> {{ ?s <temp:score{1}> ?o . }}}};
 
                                         '''
-    COMMAND_TO_DIFFUSE_SCORES_WORKING = '''
+    COMMAND_TO_DIFFUSE_SCORES = '''
                                         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
                                         insert {{graph <http://workingGraph> {{?o <temp:score{0}> ?new_score}}}} where {{
                                         
@@ -142,4 +142,4 @@ class GraphDiffusion(GraphAlgorithmModule.GraphAlgorithm):
             writer.writeLine('Vertex: ' + result['vertex']['value'] + ', Score: ' + result['score']['value'])
 
         writer.close()
-        self.connection.urika.update(self.name, GraphDiffusion.COMMAND_TO_FINALIZE_WORKING_GRAPH)
+        #self.connection.urika.update(self.name, GraphDiffusion.COMMAND_TO_FINALIZE_WORKING_GRAPH)
