@@ -90,7 +90,8 @@ def testRandomWalk():
 if __name__ == '__main__':
     
     # this is a beta version k-parallel random walk
-
+    # please note that the graph should be bidirectional (undirected)
+    
     LENGTH_OF_PATH = 10;
     NO_OF_THREADS = 1000; 
     MAX_ITERATION = 5;
