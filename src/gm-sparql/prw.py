@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
     LENGTH_OF_PATH = 10;
     NO_OF_THREADS = 1000; 
-    MAX_ITERATION = 30;
+    MAX_ITERATION = 5;
     print "* Running Random Walk ... "
     startTime = time.time()
     testRandomWalk()

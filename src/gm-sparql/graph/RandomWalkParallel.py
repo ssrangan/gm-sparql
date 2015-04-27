@@ -183,9 +183,10 @@ class RandomWalk(GraphAlgorithmModule.GraphAlgorithm):
         while True:
             start = time.time()
             self.connection.urika.update(self.name, RandomWalk.COMMAND_TO_GET_START_NODES.format(self.NO_OF_THREADS))
+            
             for stepNo in range(1, self.LENGTH_OF_PATH+1): 
                 self.connection.urika.update(self.name, RandomWalk.COMMAND_TO_RANDOM_WALK.format(stepNo, stepNo-1))
-                self.connection.urika.update(self.name, RandomWalk.COMMAND_TO_UPDATE_PATH_RANK)
+            self.connection.urika.update(self.name, RandomWalk.COMMAND_TO_UPDATE_PATH_RANK)
             if self.isConverged():
                 print "Converged!"
                 break
